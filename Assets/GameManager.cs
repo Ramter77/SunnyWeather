@@ -6,7 +6,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     //private var
-
+    
+        // tassio test
     void Start()
     {
         
