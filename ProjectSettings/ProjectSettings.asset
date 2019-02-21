@@ -602,10 +602,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: daa9fd0e-412d-4191-abfc-e55a8d771a1c
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: SunnyWeather
+  organizationId: ramter7
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
