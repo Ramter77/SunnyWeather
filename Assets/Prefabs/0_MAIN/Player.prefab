@@ -252,8 +252,9 @@ GameObject:
   - component: {fileID: 4940368103730465198}
   - component: {fileID: 4940368103730465201}
   - component: {fileID: 4940368103730465200}
-  - component: {fileID: 4940368103730465203}
   - component: {fileID: 4940368103730465202}
+  - component: {fileID: 4940368103730465203}
+  - component: {fileID: 2006956699}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -321,6 +322,24 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!143 &4940368103730465202
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4940368103730465205}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 80
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4940368103730465203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,21 +386,19 @@ MonoBehaviour:
     m_RotationOrder: 4
   jumpMultiplier: 10
   jumpKey: 32
---- !u!143 &4940368103730465202
-CharacterController:
+--- !u!114 &2006956699
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4940368103730465205}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 80
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3caac4ec435705c41ad1cc589acf346d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 1827516718631924487, guid: 3eb95e30febef1944b05895be8e96c20, type: 3}
+  hotkey: 323
+  fixedAngle: 1
+  mouseWheelRotationMultiplier: 0.1
