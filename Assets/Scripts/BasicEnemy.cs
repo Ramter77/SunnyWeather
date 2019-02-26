@@ -6,11 +6,8 @@ using UnityEngine.AI;
 public class BasicEnemy : MonoBehaviour
 {
     [Header("Navigation")]
-    public int wanderIndex;
     private NavMeshAgent agent;
-    private GameObject[] wander;
-    private Transform[] wanderPoints;
-
+    private GameObject closest = null;
     [Header("BehaviorStates")]
     public bool attackEnabled = false;
 
@@ -19,15 +16,7 @@ public class BasicEnemy : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        wander = GameObject.FindGameObjectsWithTag("WanderPoints");
-        wanderPoints = new Transform[wander.Length];
-        for (int i = 0; i < wander.Length; i++)
-        {
-            wanderPoints[i] = wander[i].transform;
-            //Debug.Log(wanderPoints[i]);
-        }
-        wanderIndex = Random.Range(0, wanderPoints.Length);
-        GoToNextPoint();
+        FindClosestTarget();
     }
 
     // Update is called once per frame
@@ -37,10 +26,7 @@ public class BasicEnemy : MonoBehaviour
     }
 
 
-    public void GoToNextPoint()
-    {
-        agent.destination = wanderPoints[wanderIndex].position;
-    }
+   
 
     public void CheckDestinationReached()
     {
@@ -49,5 +35,24 @@ public class BasicEnemy : MonoBehaviour
             agent.isStopped = true;
             attackEnabled = true;
         }
+    }
+
+    public void FindClosestTarget()
+    {
+        GameObject[] gos;
+        gos = GameObject.FindGameObjectsWithTag("possibleTargets");
+        float distance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject go in gos)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        agent.destination = closest.transform.position;
     }
 }
