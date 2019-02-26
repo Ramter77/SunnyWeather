@@ -12,6 +12,7 @@ public class AttackAndDamage : MonoBehaviour
 
     [Header("Damage Calculation")]
     private float targetDefense = 0f;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,7 @@ public class AttackAndDamage : MonoBehaviour
         
     }
 
-    public void performAttack()
+    public void cooldownAttack()
     {
         Debug.Log("Im attacking this target");
     }
@@ -34,7 +35,7 @@ public class AttackAndDamage : MonoBehaviour
     {
         if(other.gameObject.tag == "possibleTargets" || other.gameObject.tag == "Player")
         {
-            performAttack();
+            cooldownAttack();
             targetDefense = other.GetComponent<LifeAndStats>().defense;
             float applyingDamage = damage - targetDefense/penetrationFactor;
             Debug.Log(applyingDamage);
