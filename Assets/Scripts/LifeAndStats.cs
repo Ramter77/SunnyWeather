@@ -17,8 +17,9 @@ public class LifeAndStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(gameObject.tag == "possibleTarget" && health <= 0)
+        if(gameObject.CompareTag("possibleTargets") && health <= 0)
         {
+            //Debug.Log("yeah im dead");
             gameObject.tag = "destroyedTarget";
         }
     }
