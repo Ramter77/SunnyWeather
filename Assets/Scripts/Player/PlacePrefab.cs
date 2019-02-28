@@ -5,40 +5,54 @@ using UnityEngine;
 
 public class PlacePrefab : MonoBehaviour
 {
+    #region Variables
     [Header("Prefabs")]
-    [Tooltip("Prefabs to place on Terrain with assigned HotKeys (Place Prefab on IgnoreRaycast Layer for now)")]
+    [Tooltip("Prefabs to place on colliders with assigned HotKeys (Place Prefab on 'Ground' layer)")]
     [SerializeField]
     private GameObject Prefab;
+
+    [Tooltip("Layer of colliders to place Prefabs on")]
     [SerializeField]
     private LayerMask mask;
+
+    //Current selected prefab with assigned HotKey
     private GameObject currentPrefab;
+
+
     [Header("Controls")]
     [Tooltip("HotKeys to place assigned Prefabs")]
     [SerializeField]
     private KeyCode hotkey = KeyCode.Mouse0;
+
+    [Tooltip("Maximum distance to place Prefabs")]
     [SerializeField]
     private float maxRayDistance = 1000;
+    
     [Tooltip("Check to Instantiate Prefabs straight")]
     [SerializeField]
     private Boolean fixedAngle;
+
+    [Tooltip("Check to place Prefabs in the middle of the screen")]
     [SerializeField]
     private Boolean fixedCameraPlacement;
+
     private float mouseWheelRotation;
     [SerializeField]
     private float mouseWheelRotationMultiplier = 0.1f;
+    #endregion
 
     private void Update()
     {
         checkHotKeys(); //Instantiates Prefab & sets it to currentPrefab to use for following functions
-
         if (currentPrefab != null)
         {
-            MovePrefabToViewPort();
+            MovePrefabToRayHit();
             RotatePrefabByScrolling();
             PlacePrefabOnRelease();
         }
     }
 
+    #region checkHotKeys
     private void checkHotKeys()
     {
         //If hotKey is pressed Instantiate Prefab & assign as currentPrefab
@@ -50,9 +64,11 @@ public class PlacePrefab : MonoBehaviour
             }
         }
     }
+    #endregion
 
-    private void MovePrefabToViewPort()
-    {      //! Place Prefab on IgnoreRaycast Layer for now
+    #region MovePrefabToRayHit
+    private void MovePrefabToRayHit()
+    {   //! Place Prefab on "Ground" layer
         Ray ray;
         RaycastHit hit;
 
@@ -80,14 +96,30 @@ public class PlacePrefab : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region RotatePrefabByScrolling
+    private void RotatePrefabByScrolling()
+    {
+        //Rotate the currentPrefab by scrolling the mouseWheel
+        mouseWheelRotation = Input.mouseScrollDelta.y;
+        currentPrefab.transform.Rotate(Vector3.up, mouseWheelRotation * mouseWheelRotationMultiplier * 10);
+
+        //Reset rotation
+        mouseWheelRotation = 0;
+    }
+
+    /*  //!OLD
     private void RotatePrefabByScrolling()
     {
         //Rotate the currentPrefab by scrolling the mouseWheel
         mouseWheelRotation += Input.mouseScrollDelta.y;
         currentPrefab.transform.Rotate(Vector3.up, mouseWheelRotation * mouseWheelRotationMultiplier);
     }
+    */
+   #endregion
 
+    #region PlaceOnRelease
     private void PlacePrefabOnRelease()
     {
         //If hotKey is released then currentObject & mouseWheelRotation are reset
@@ -97,4 +129,5 @@ public class PlacePrefab : MonoBehaviour
             mouseWheelRotation = 0;
         }
     }
+    #endregion
 }
