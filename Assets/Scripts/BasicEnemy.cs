@@ -1,22 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.AI;
 
 public class BasicEnemy : MonoBehaviour
 {
     [Header("Navigation")]
-    public NavMeshAgent agent;
-    public GameObject closest = null;
-    private GameObject[] gos;
-
+    private NavMeshAgent agent;
+    private GameObject closest = null;
     [Header("BehaviorStates")]
-    public int attackState = 0; // 0 == not attacking // 1 == attacking // 2 == has recently attacked
-
-    [Header("Interaction/Vision/Attack Radius")]
-    public float attackRange = 5f; 
-    private float stoppingRange = 3.5f; // stops the ai from bumping into targets
+    public bool attackEnabled = false;
 
 
     // Start is called before the first frame update
@@ -37,30 +30,16 @@ public class BasicEnemy : MonoBehaviour
 
     public void CheckDestinationReached()
     {
-        Vector3 diffToTarget = closest.transform.position - gameObject.transform.position;
-        float curDistance = diffToTarget.sqrMagnitude;
-
-        if (curDistance <= attackRange) // in attack range
+        if (!agent.pathPending && agent.remainingDistance < 1f)
         {
-            Debug.Log("queue attack");
-            attackState = 1;
-            gameObject.GetComponent<AttackAndDamage>().performAttack();
-        }
-        if(curDistance <= stoppingRange) // in stopping range prevents ai from bumping into player
-        {
-            agent.destination = gameObject.transform.position;
-            
-        }
-        if((attackState == 1 && curDistance >= attackRange) || closest.gameObject.tag == "destroyedTarget") // if target moves away or 
-        {
-            Array.Clear(gos, 0, gos.Length);
-            FindClosestTarget();
-            //gameObject.GetComponent<AttackAndDamage>().enableAttack = false;
+            agent.isStopped = true;
+            attackEnabled = true;
         }
     }
 
     public void FindClosestTarget()
     {
+        GameObject[] gos;
         gos = GameObject.FindGameObjectsWithTag("possibleTargets");
         float distance = Mathf.Infinity;
         Vector3 position = transform.position;
@@ -75,6 +54,5 @@ public class BasicEnemy : MonoBehaviour
             }
         }
         agent.destination = closest.transform.position;
-        gameObject.GetComponent<AttackAndDamage>().Target = closest; 
     }
 }

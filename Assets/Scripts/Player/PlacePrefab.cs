@@ -9,20 +9,15 @@ public class PlacePrefab : MonoBehaviour
     [Tooltip ("Prefabs to place on Terrain with assigned HotKeys (Place Prefab on IgnoreRaycast Layer for now)")]
     [SerializeField]
     private GameObject Prefab;
-    [SerializeField]
-    private LayerMask mask;
     private GameObject currentPrefab;
+
     [Header ("Controls")]
     [Tooltip("HotKeys to place assigned Prefabs")]
     [SerializeField]
     private KeyCode hotkey = KeyCode.Mouse0;
-    [SerializeField]
-    private float maxRayDistance = 1000;
     [Tooltip ("Check to Instantiate Prefabs straight")]
     [SerializeField]
     private Boolean fixedAngle;
-    [SerializeField]
-    private Boolean fixedCameraPlacement;
     private float mouseWheelRotation;
     [SerializeField]
     private float mouseWheelRotationMultiplier = 0.1f;
@@ -48,19 +43,11 @@ public class PlacePrefab : MonoBehaviour
     }
 
     private void MovePrefabToViewPort() {      //! Place Prefab on IgnoreRaycast Layer for now
-        Ray ray;
+        //Cast a ray to the middle of the screen
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
-        if (fixedCameraPlacement) {
-            //Cast a ray to the middle of the screen
-            ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        }
-        else {
-            //Cast a ray to the mouse position
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        }        
-
-        if (Physics.Raycast(ray, out hit, maxRayDistance, mask)) {
+        if (Physics.Raycast(ray, out hit)) {
             //Move currentPrefab to rayCastHit position + half of its scale (//TODO: later create a variable if needed)
             float halfScale = currentPrefab.transform.localScale.y/2f;
             currentPrefab.transform.position = new Vector3(hit.point.x, hit.point.y + halfScale, hit.point.z);
