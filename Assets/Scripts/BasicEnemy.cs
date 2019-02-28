@@ -10,6 +10,7 @@ public class BasicEnemy : MonoBehaviour
     public NavMeshAgent agent;
     public GameObject closest = null;
     private GameObject[] gos;
+    private Rigidbody rigid;
 
     [Header("BehaviorStates")]
     public int attackState = 0; // 0 == not attacking // 1 == attacking // 2 == has recently attacked
@@ -23,6 +24,7 @@ public class BasicEnemy : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        rigid = GetComponent<Rigidbody>();
         FindClosestTarget();
     }
 
@@ -30,6 +32,7 @@ public class BasicEnemy : MonoBehaviour
     void Update()
     {
         CheckDestinationReached();
+        //Debug.Log("Agent" + agent.velocity);
     }
 
 
@@ -49,6 +52,8 @@ public class BasicEnemy : MonoBehaviour
         if (curDistance <= stoppingRange) // in stopping range prevents ai from bumping into player
         {
             agent.destination = gameObject.transform.position;
+            rigid.velocity = Vector3.zero;
+            rigid.angularVelocity = Vector3.zero;
 
         }
         if ((attackState == 1 && curDistance >= attackRange) || closest.gameObject.tag == "destroyedTarget") // if target moves away or 

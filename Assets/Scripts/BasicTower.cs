@@ -41,7 +41,7 @@ public class BasicTower : MonoBehaviour
         shooterPosition = shooter.transform.position;
         targetPosition = target.transform.position;
         shooterVelocity = shooter.GetComponent<Rigidbody>() ? shooter.GetComponent<Rigidbody>().velocity : Vector3.zero;
-        targetVelocity = target.GetComponent<Rigidbody>() ? target.GetComponent<Rigidbody>().velocity : Vector3.zero;
+        targetVelocity = target.GetComponent<BasicEnemy>().agent.velocity;
         interceptPoint = FirstOrderIntercept
         (
             shooterPosition,
@@ -51,8 +51,8 @@ public class BasicTower : MonoBehaviour
             targetVelocity
         );
         //Debug.Log(interceptPoint);
-        //Debug.Log(shooterVelocity);
-        //Debug.Log(targetVelocity);
+        Debug.Log(shooterVelocity);
+        Debug.Log(targetVelocity);
         shootProjectile();
     }
 
@@ -67,9 +67,18 @@ public class BasicTower : MonoBehaviour
         Vector3 spawnPoint = gameObject.transform.position;
         Vector3 targetPoint = interceptPoint;
         Vector3 toTarget = targetPoint - spawnPoint;
-        bulletPrefab.GetComponent<projectileVelocity>().speed = shotSpeed;
-        Instantiate(bulletPrefab, spawnPoint, Quaternion.LookRotation(toTarget));
-        StartCoroutine(shootCd());
+        if(interceptPoint.y >= 1)
+        {
+            bulletPrefab.GetComponent<projectileVelocity>().speed = shotSpeed;
+            Instantiate(bulletPrefab, spawnPoint, Quaternion.LookRotation(toTarget));
+            StartCoroutine(shootCd());
+        }
+        else
+        {
+            Debug.Log("not shootable");
+            StartCoroutine(shootCd());
+        }
+       
     }
 
     IEnumerator shootCd()
