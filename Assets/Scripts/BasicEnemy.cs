@@ -15,7 +15,7 @@ public class BasicEnemy : MonoBehaviour
     public int attackState = 0; // 0 == not attacking // 1 == attacking // 2 == has recently attacked
 
     [Header("Interaction/Vision/Attack Radius")]
-    public float attackRange = 5f; 
+    public float attackRange = 5f;
     private float stoppingRange = 3.5f; // stops the ai from bumping into targets
 
 
@@ -33,7 +33,7 @@ public class BasicEnemy : MonoBehaviour
     }
 
 
-   
+
 
     public void CheckDestinationReached()
     {
@@ -46,12 +46,12 @@ public class BasicEnemy : MonoBehaviour
             attackState = 1;
             gameObject.GetComponent<AttackAndDamage>().performAttack();
         }
-        if(curDistance <= stoppingRange) // in stopping range prevents ai from bumping into player
+        if (curDistance <= stoppingRange) // in stopping range prevents ai from bumping into player
         {
             agent.destination = gameObject.transform.position;
-            
+
         }
-        if((attackState == 1 && curDistance >= attackRange) || closest.gameObject.tag == "destroyedTarget") // if target moves away or 
+        if ((attackState == 1 && curDistance >= attackRange) || closest.gameObject.tag == "destroyedTarget") // if target moves away or 
         {
             Array.Clear(gos, 0, gos.Length);
             FindClosestTarget();
@@ -75,6 +75,6 @@ public class BasicEnemy : MonoBehaviour
             }
         }
         agent.destination = closest.transform.position;
-        gameObject.GetComponent<AttackAndDamage>().Target = closest; 
+        gameObject.GetComponent<AttackAndDamage>().Target = closest;
     }
 }
