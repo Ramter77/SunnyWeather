@@ -36,7 +36,7 @@ public class AttackAndDamage : MonoBehaviour
             targetDefense = Target.GetComponent<LifeAndStats>().defense;
             float applyingDamage = damage - targetDefense / penetrationFactor; // calculates the damage for the 
             Target.GetComponent<LifeAndStats>().health -= applyingDamage;
-            Debug.Log(Target.GetComponent<LifeAndStats>().health);
+            //Debug.Log("AI: apply damage amount" + Target.GetComponent<LifeAndStats>().health);
             enableAttack = false;
             StartCoroutine(resetAttackCooldown());
         }
@@ -47,7 +47,7 @@ public class AttackAndDamage : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("I see the player");
+            //Debug.Log("I see the player");
 
         }
     }

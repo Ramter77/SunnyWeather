@@ -22,5 +22,9 @@ public class LifeAndStats : MonoBehaviour
             //Debug.Log("yeah im dead");
             gameObject.tag = "destroyedTarget";
         }
+        if (gameObject.CompareTag("Enemy") && health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

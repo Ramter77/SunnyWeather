@@ -10,6 +10,7 @@ public class BasicTower : MonoBehaviour
     private GameObject target;
     public GameObject bulletPrefab;
     public float shotSpeed = 2f;
+    public float attackRange = 20f;
     //locations
     public Vector3 interceptPoint;
     private Vector3 shooterPosition;
@@ -28,32 +29,44 @@ public class BasicTower : MonoBehaviour
         shooterVelocity = shooter.GetComponent<Rigidbody>() ? shooter.GetComponent<Rigidbody>().velocity : Vector3.zero;
         targetVelocity = target.GetComponent<Rigidbody>() ? target.GetComponent<Rigidbody>().velocity : Vector3.zero;
         StartCoroutine(startAiming());
+        
     }
+   
 
-    // Update is called once per frame
-    void Update()
+// Update is called once per frame
+void Update()
     {
         
     }
 
     private void aimAtTarget()
     {
-        shooterPosition = shooter.transform.position;
-        targetPosition = target.transform.position;
-        shooterVelocity = shooter.GetComponent<Rigidbody>() ? shooter.GetComponent<Rigidbody>().velocity : Vector3.zero;
-        targetVelocity = target.GetComponent<BasicEnemy>().agent.velocity;
-        interceptPoint = FirstOrderIntercept
-        (
-            shooterPosition,
-            shooterVelocity,
-            shotSpeed,
-            targetPosition,
-            targetVelocity
-        );
-        //Debug.Log(interceptPoint);
-        Debug.Log(shooterVelocity);
-        Debug.Log(targetVelocity);
-        shootProjectile();
+        FindClosestTarget();
+        target = closestEnemy;
+        if(target != null)
+        {
+            shooterPosition = shooter.transform.position;
+            targetPosition = target.transform.position;
+            shooterVelocity = shooter.GetComponent<Rigidbody>() ? shooter.GetComponent<Rigidbody>().velocity : Vector3.zero;
+            targetVelocity = target.GetComponent<BasicEnemy>().agent.velocity;
+            interceptPoint = FirstOrderIntercept
+            (
+                shooterPosition,
+                shooterVelocity,
+                shotSpeed,
+                targetPosition,
+                targetVelocity
+            );
+
+
+            Debug.Log(shooterVelocity);
+            Debug.Log(targetVelocity);
+            shootProjectile();
+
+            //Debug.Log(interceptPoint);
+        }
+
+
     }
 
     IEnumerator startAiming()
@@ -67,7 +80,7 @@ public class BasicTower : MonoBehaviour
         Vector3 spawnPoint = gameObject.transform.position;
         Vector3 targetPoint = interceptPoint;
         Vector3 toTarget = targetPoint - spawnPoint;
-        if(interceptPoint.y >= 1)
+        if(Vector3.Distance(spawnPoint, targetPoint) <= attackRange)
         {
             bulletPrefab.GetComponent<projectileVelocity>().speed = shotSpeed;
             Instantiate(bulletPrefab, spawnPoint, Quaternion.LookRotation(toTarget));
@@ -75,7 +88,7 @@ public class BasicTower : MonoBehaviour
         }
         else
         {
-            Debug.Log("not shootable");
+            Debug.Log("Turret: Target not in range");
             StartCoroutine(shootCd());
         }
        

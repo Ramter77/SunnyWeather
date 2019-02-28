@@ -45,7 +45,7 @@ public class BasicEnemy : MonoBehaviour
 
         if (curDistance <= attackRange) // in attack range
         {
-            Debug.Log("queue attack");
+            //Debug.Log("AI: queue attack");
             attackState = 1;
             gameObject.GetComponent<AttackAndDamage>().performAttack();
         }
