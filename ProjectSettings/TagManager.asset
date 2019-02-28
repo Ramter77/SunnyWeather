@@ -6,6 +6,7 @@ TagManager:
   tags:
   - possibleTargets
   - destroyedTarget
+  - Enemy
   layers:
   - Default
   - TransparentFX

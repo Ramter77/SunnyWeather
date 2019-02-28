@@ -6,7 +6,7 @@ public class LifeAndStats : MonoBehaviour
 {
     public float health = 100f;
     public float defense = 20f;
-
+    
 
     // Start is called before the first frame update
     void Start()
