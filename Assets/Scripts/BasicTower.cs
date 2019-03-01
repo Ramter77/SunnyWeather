@@ -11,6 +11,8 @@ public class BasicTower : MonoBehaviour
     public GameObject bulletPrefab;
     public float shotSpeed = 2f;
     public float attackRange = 20f;
+    private int turretLayerIgnore = ~11;
+
     //locations
     public Vector3 interceptPoint;
     private Vector3 shooterPosition;
@@ -57,12 +59,22 @@ void Update()
                 targetPosition,
                 targetVelocity
             );
-
-
-            Debug.Log(shooterVelocity);
-            Debug.Log(targetVelocity);
-            shootProjectile();
-
+            RaycastHit hit;
+            float distance = Vector3.Distance(gameObject.transform.position, interceptPoint);
+            Vector3 fwd = interceptPoint - gameObject.transform.position;
+            if (Physics.Raycast(transform.position, fwd, out hit, distance,turretLayerIgnore))
+            {
+                Debug.DrawLine(transform.position, hit.point);
+                Debug.Log("Terrain in the way");
+                StartCoroutine(startAiming());
+            }
+            else
+            {
+                shootProjectile();
+            }
+               
+            //Debug.Log(shooterVelocity);
+            //Debug.Log(targetVelocity);
             //Debug.Log(interceptPoint);
         }
 
