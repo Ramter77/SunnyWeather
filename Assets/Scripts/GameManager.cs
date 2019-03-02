@@ -31,17 +31,17 @@ public class GameManager : MonoBehaviour
     #region SlowMotion
     private void slowMotion()
     {
-        
-        if (holdHotKey) {
-            if (Input.GetKey(hotkey)) {
-                if (Time.timeScale == 1.0f)
-                    Time.timeScale = slowMotionTimeScale;
-                else
-                    Time.timeScale = 1.0f;
-                // Adjust fixed delta time according to timescale
-                // The fixed delta time will now be 0.02 frames per real-time second
-                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        if (holdHotKey) 
+        {
+            if (Input.GetKey(hotkey)) 
+            {
+                Time.timeScale = slowMotionTimeScale;
             }
+            else
+            {
+                Time.timeScale = 1.0f;
+            }
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
         }
         else
         {

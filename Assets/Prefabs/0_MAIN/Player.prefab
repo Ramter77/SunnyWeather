@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &416069771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 416069772}
+  m_Layer: 9
+  m_Name: projectileOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &416069772
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416069771}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 467819357}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &70975883315705321
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,6 +1006,7 @@ GameObject:
   - component: {fileID: 8069437952224432033}
   - component: {fileID: 5174027409509022316}
   - component: {fileID: 370237066346874404}
+  - component: {fileID: 1240220719}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -997,6 +1028,7 @@ Transform:
   - {fileID: 1336128085569469945}
   - {fileID: 9039268401864465501}
   - {fileID: 6380848302402224210}
+  - {fileID: 416069772}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1106,7 +1138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3caac4ec435705c41ad1cc589acf346d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 1827516718631924487, guid: 3eb95e30febef1944b05895be8e96c20, type: 3}
+  Prefabs:
+  - {fileID: 1827516718631924487, guid: 3eb95e30febef1944b05895be8e96c20, type: 3}
+  - {fileID: 5132798727554801362, guid: add3cd4764dff4641b4b0599f4f04f65, type: 3}
   mask:
     serializedVersion: 2
     m_Bits: 1024
@@ -1114,7 +1148,26 @@ MonoBehaviour:
   maxRayDistance: 100
   fixedAngle: 1
   fixedCameraPlacement: 0
+  fixedRotation: 1
   mouseWheelRotationMultiplier: 0.5
+--- !u!114 &1240220719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3679963362610401357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07310bf9268b8e74d975bc6de788ccd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: {fileID: 1544899243408029130, guid: 1145971759cf4554183ec2c4d65d44eb,
+    type: 3}
+  projectileOrigin: {fileID: 416069772}
+  hotkey: 323
+  speed: 10
+  destroyTime: 5
 --- !u!1 &3970495729762734144
 GameObject:
   m_ObjectHideFlags: 0

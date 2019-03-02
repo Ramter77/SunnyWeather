@@ -6,21 +6,22 @@ using UnityEngine;
 public class PlacePrefab : MonoBehaviour
 {
     #region Variables
-    [Header("Prefabs")]
-    [Tooltip("Prefabs to place on colliders with assigned HotKeys (Place Prefab on 'Ground' layer)")]
+    //[Header("Prefabs")]
+    [Tooltip("Prefabs to place with number keys 1-9 on colliders with assigned HotKey")]
     [SerializeField]
-    private GameObject Prefab;
+    private GameObject[] Prefabs;
 
-    [Tooltip("Layer of colliders to place Prefabs on")]
+    [Tooltip("Layer of colliders to place Prefabs on ('Ground')")]
     [SerializeField]
     private LayerMask mask;
 
     //Current selected prefab with assigned HotKey
     private GameObject currentPrefab;
+    private int currentPrefabIndex = -1;
 
 
     [Header("Controls")]
-    [Tooltip("HotKeys to place assigned Prefabs")]
+    [Tooltip("HotKey to place assigned Prefabs")]
     [SerializeField]
     private KeyCode hotkey = KeyCode.Mouse0;
 
@@ -35,6 +36,10 @@ public class PlacePrefab : MonoBehaviour
     [Tooltip("Check to place Prefabs in the middle of the screen")]
     [SerializeField]
     private Boolean fixedCameraPlacement;
+
+    [Tooltip("Check to rotate Prefabs by a fixed value")]
+    [SerializeField]
+    private Boolean fixedRotation = true;
 
     private float mouseWheelRotation;
     [SerializeField]
@@ -55,14 +60,36 @@ public class PlacePrefab : MonoBehaviour
     #region checkHotKeys
     private void checkHotKeys()
     {
-        //If hotKey is pressed Instantiate Prefab & assign as currentPrefab
-        if (Input.GetKeyDown(hotkey))
+        for (int i = 0; i < Prefabs.Length; i++)
         {
-            if (currentPrefab == null)
+            //If pressed a number key between 1-9
+            if (Input.GetKeyDown(KeyCode.Alpha0 + 1 + i))
             {
-                currentPrefab = Instantiate(Prefab);
+                //If pressed again: reset
+                if (PressedKeyOfCurrentPrefab(i))
+                {
+                    Destroy(currentPrefab);
+                    currentPrefabIndex = -1;
+                }
+                else
+                {
+                    if (currentPrefab != null)
+                    {
+                        Destroy(currentPrefab);
+                    }
+
+                    currentPrefab = Instantiate(Prefabs[i]);
+                    currentPrefabIndex = i;
+                }
+
+                break;
             }
         }
+    }
+
+    private bool PressedKeyOfCurrentPrefab(int i)
+    {
+        return currentPrefab != null && currentPrefabIndex == i;
     }
     #endregion
 
@@ -101,32 +128,29 @@ public class PlacePrefab : MonoBehaviour
     #region RotatePrefabByScrolling
     private void RotatePrefabByScrolling()
     {
-        //Rotate the currentPrefab by scrolling the mouseWheel
-        mouseWheelRotation = Input.mouseScrollDelta.y;
-        currentPrefab.transform.Rotate(Vector3.up, mouseWheelRotation * mouseWheelRotationMultiplier * 10);
+        if (fixedRotation) {
+            //Rotate the currentPrefab by scrolling the mouseWheel
+            mouseWheelRotation = Input.mouseScrollDelta.y;
+            currentPrefab.transform.Rotate(Vector3.up, mouseWheelRotation * mouseWheelRotationMultiplier * 10);
 
-        //Reset rotation
-        mouseWheelRotation = 0;
+            //Reset rotation
+            mouseWheelRotation = 0;
+        }
+        else {
+            mouseWheelRotation += Input.mouseScrollDelta.y;
+            currentPrefab.transform.Rotate(Vector3.up, mouseWheelRotation * mouseWheelRotationMultiplier);
+        }
+        
     }
-
-    /*  //!OLD
-    private void RotatePrefabByScrolling()
-    {
-        //Rotate the currentPrefab by scrolling the mouseWheel
-        mouseWheelRotation += Input.mouseScrollDelta.y;
-        currentPrefab.transform.Rotate(Vector3.up, mouseWheelRotation * mouseWheelRotationMultiplier);
-    }
-    */
    #endregion
 
     #region PlaceOnRelease
     private void PlacePrefabOnRelease()
     {
-        //If hotKey is released then currentObject & mouseWheelRotation are reset
-        if (Input.GetKeyUp(hotkey))
+        //If hotKey is pressed again then reset currentObject
+        if (Input.GetKeyDown(hotkey))
         {
             currentPrefab = null;
-            mouseWheelRotation = 0;
         }
     }
     #endregion
