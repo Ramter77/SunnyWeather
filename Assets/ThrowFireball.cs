@@ -40,7 +40,6 @@ public class ThrowFireball : MonoBehaviour
             projectileRB.velocity = transform.TransformDirection(new Vector3(0, 0, speed));
 
             Destroy(projectileRB.gameObject, destroyTime);
-            //Destroy(projectileRB, destroyTime);
         }
     }
     #endregion

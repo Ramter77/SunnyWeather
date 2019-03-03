@@ -115,7 +115,7 @@ public class PlacePrefab : MonoBehaviour
             //Move currentPrefab to rayCastHit position + half of its scale (//TODO: later create a variable if needed)
             float halfScale = currentPrefab.transform.localScale.y / 2f;
             currentPrefab.transform.position = new Vector3(hit.point.x, hit.point.y + halfScale, hit.point.z);
-
+            
             //Make it stand on hit Terrain with 90 degree angle
             if (!fixedAngle)
             {
@@ -150,6 +150,19 @@ public class PlacePrefab : MonoBehaviour
         //If hotKey is pressed again then reset currentObject
         if (Input.GetKeyDown(hotkey))
         {
+            //TODO: At this point check if the prefab can be placed there and change its shader accordingly
+            MeshRenderer mesh = currentPrefab.GetComponent<MeshRenderer>();
+            Material mat = mesh.material;
+            //Color col = mat.GetColor("_BaseColor");
+            //col.a = 0.1f;
+            //mat.SetColor("_BaseColor", col);
+            Shader.EnableKeyword("_SurfaceType");
+            mat.SetFloat("_SurfaceType", 0);
+
+            mat.SetColor("_BaseColor", Color.green);
+            mat.DisableKeyword("_SurfaceType");
+
+
             currentPrefab = null;
         }
     }
