@@ -65,7 +65,7 @@ void Update()
             if (Physics.Raycast(transform.position, fwd, out hit, distance,turretLayerIgnore))
             {
                 Debug.DrawLine(transform.position, hit.point);
-                Debug.Log("Terrain in the way");
+                //Debug.Log("Terrain in the way");
                 StartCoroutine(startAiming());
             }
             else

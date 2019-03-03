@@ -15,6 +15,12 @@ public class PlacePrefab : MonoBehaviour
     [SerializeField]
     private LayerMask mask;
 
+    [Tooltip("Material used to color transparent Prefabs. Green if it's allowed to be placed at that location and Red if it's not")]
+    //[SerializeField]
+    private Material RedGreenMaterial;
+    private Material OriginalMaterial1;
+    private Material _Material; //Own material
+
     //Current selected prefab with assigned HotKey
     private GameObject currentPrefab;
     private int currentPrefabIndex = -1;
@@ -44,14 +50,29 @@ public class PlacePrefab : MonoBehaviour
     private float mouseWheelRotation;
     [SerializeField]
     private float mouseWheelRotationMultiplier = 0.1f;
+
+
+
+    //Todo: Clean these
+    private bool placing, setColorToRed;
+    private float halfScale;
     #endregion
+
+    private void Start() {
+        //Todo: save original materials to replace after placing individual Prefabs
+        //OriginalMaterial + i = Prefabs[i].GetComponent<MeshRenderer>().material;
+    }
 
     private void Update()
     {
         checkHotKeys(); //Instantiates Prefab & sets it to currentPrefab to use for following functions
         if (currentPrefab != null)
         {
+            //Get halfScale in update to check transform.y against it and place appropriately because the anchor is centered
+            halfScale = currentPrefab.transform.localScale.y / 2f;
+
             MovePrefabToRayHit();
+            ChangeMaterialColor();
             RotatePrefabByScrolling();
             PlacePrefabOnRelease();
         }
@@ -62,7 +83,7 @@ public class PlacePrefab : MonoBehaviour
     {
         for (int i = 0; i < Prefabs.Length; i++)
         {
-            //If pressed a number key between 1-9
+            //If pressed a number key between 1-9 instantiate corresponding Prefab
             if (Input.GetKeyDown(KeyCode.Alpha0 + 1 + i))
             {
                 //If pressed again: reset
@@ -80,6 +101,12 @@ public class PlacePrefab : MonoBehaviour
 
                     currentPrefab = Instantiate(Prefabs[i]);
                     currentPrefabIndex = i;
+
+                    placing = true;
+
+                    //Save original Material & On Instantiation give the Prefab the RedGreenMaterial
+                    OriginalMaterial1 = currentPrefab.GetComponent<MeshRenderer>().material;    //! 'OriginalMaterial' + i
+                    currentPrefab.GetComponent<MeshRenderer>().material = Resources.Load<Material>("RedGreenMaterial");
                 }
 
                 break;
@@ -93,9 +120,29 @@ public class PlacePrefab : MonoBehaviour
     }
     #endregion
 
+    #region ChangeMaterialColor
+    private void ChangeMaterialColor()
+    {
+        if (placing) {
+            //Color Prefab green when on base terrain level (0), else color it red
+            if (setColorToRed) {
+                currentPrefab.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.red);
+            }
+            else {
+                if (currentPrefab.transform.position.y == halfScale) {
+                    currentPrefab.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.green);
+                }
+                else {
+                    currentPrefab.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.red);
+                }
+            }
+        }
+    }
+    #endregion
+
     #region MovePrefabToRayHit
     private void MovePrefabToRayHit()
-    {   //! Place Prefab on "Ground" layer
+    {
         Ray ray;
         RaycastHit hit;
 
@@ -112,8 +159,7 @@ public class PlacePrefab : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxRayDistance, mask))
         {
-            //Move currentPrefab to rayCastHit position + half of its scale (//TODO: later create a variable if needed)
-            float halfScale = currentPrefab.transform.localScale.y / 2f;
+            //Move currentPrefab to rayCastHit position + half of its scale
             currentPrefab.transform.position = new Vector3(hit.point.x, hit.point.y + halfScale, hit.point.z);
             
             //Make it stand on hit Terrain with 90 degree angle
@@ -150,20 +196,26 @@ public class PlacePrefab : MonoBehaviour
         //If hotKey is pressed again then reset currentObject
         if (Input.GetKeyDown(hotkey))
         {
-            //TODO: At this point check if the prefab can be placed there and change its shader accordingly
-            MeshRenderer mesh = currentPrefab.GetComponent<MeshRenderer>();
-            Material mat = mesh.material;
-            //Color col = mat.GetColor("_BaseColor");
-            //col.a = 0.1f;
-            //mat.SetColor("_BaseColor", col);
-            Shader.EnableKeyword("_SurfaceType");
-            mat.SetFloat("_SurfaceType", 0);
+            currentPrefab.GetComponent<MeshRenderer>().material = OriginalMaterial1;    //Switch back to original Material
+            currentPrefab.GetComponent<BoxCollider>().isTrigger = false;    //Turn on collision
+            currentPrefab.GetComponent<PlacePrefabCollisionColor>().enabled = false;     //Disable OnTrigger script
 
-            mat.SetColor("_BaseColor", Color.green);
-            mat.DisableKeyword("_SurfaceType");
+            currentPrefab.gameObject.layer = 11;    //Put on "Turrets" layer
 
-
+            //Reset
             currentPrefab = null;
+            placing = false;
+        }
+    }
+    #endregion
+
+    #region Public SetColorToRed
+    public void SetColorToRed(bool red) {
+        if (red) {
+            setColorToRed = true;
+        }
+        else {
+            setColorToRed = false;
         }
     }
     #endregion

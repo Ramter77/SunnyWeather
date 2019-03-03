@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 1578583562}
   - component: {fileID: 1578583564}
   - component: {fileID: 1578583563}
+  - component: {fileID: 634753299639891702}
   m_Layer: 0
   m_Name: Drywall Panel (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 69
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 77
   m_IsActive: 1
 --- !u!4 &1578583562
 Transform:
@@ -78,6 +79,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &634753299639891702
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578583561}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.6599998, y: 2.44, z: 0.11}
+  m_Center: {x: 0, y: 1.22, z: 0.054}
 --- !u!1 &2137401167
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,8 +107,8 @@ GameObject:
   m_Name: Stud Frame (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 69
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 77
   m_IsActive: 1
 --- !u!4 &2137401168
 Transform:
@@ -170,8 +184,8 @@ GameObject:
   m_Name: Stud Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 69
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 77
   m_IsActive: 1
 --- !u!4 &1596492219796438433
 Transform:
@@ -247,8 +261,8 @@ GameObject:
   m_Name: Stud Pile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 69
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 77
   m_IsActive: 1
 --- !u!4 &958990156168372619
 Transform:
@@ -325,8 +339,8 @@ GameObject:
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 69
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 77
   m_IsActive: 0
 --- !u!4 &798653750895148377
 Transform:
@@ -413,12 +427,13 @@ GameObject:
   - component: {fileID: 1607200077416228428}
   - component: {fileID: 3621578215924234091}
   - component: {fileID: 8619800740322105891}
+  - component: {fileID: 7769274857731003535}
   m_Layer: 0
   m_Name: Drywall Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 69
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 77
   m_IsActive: 1
 --- !u!4 &1607200077416228428
 Transform:
@@ -480,6 +495,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &7769274857731003535
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6529417237271854469}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.6599998, y: 2.44, z: 0.145}
+  m_Center: {x: 0, y: 1.22, z: -0.05}
 --- !u!1 &8623569952543490667
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,8 +560,8 @@ GameObject:
   m_Name: OSB Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 69
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 77
   m_IsActive: 1
 --- !u!4 &2724986847810825896
 Transform:
