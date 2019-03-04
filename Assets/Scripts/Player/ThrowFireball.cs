@@ -6,6 +6,7 @@ using UnityEngine;
 public class ThrowFireball : MonoBehaviour
 {
     //! ONLY TO TEST
+    //Todo: convert this to player attack script?
 
     #region Variables
     [Tooltip("Projectile to throw")]
@@ -21,11 +22,23 @@ public class ThrowFireball : MonoBehaviour
     private KeyCode hotkey = KeyCode.Mouse0;
 
     [SerializeField]
+    private float attackCD = 0.1f;
+    private float attackSpeed;
+
+    [SerializeField]
     private float speed = 10;
 
     [SerializeField]
     private float destroyTime = 10;
+
+
+
+    private Animator playerAnim;
     #endregion
+
+    void Start() {
+        playerAnim = GetComponent<Animator>();
+    }
 
     void Update()
     {
@@ -36,10 +49,19 @@ public class ThrowFireball : MonoBehaviour
     private void shootProjectile()
     {
         if (Input.GetKeyDown(hotkey)) {
-            Rigidbody projectileRB = Instantiate(projectile, projectileOrigin.position, projectileOrigin.rotation);
-            projectileRB.velocity = transform.TransformDirection(new Vector3(0, 0, speed));
+            if (Time.time > attackSpeed) {
+                attackSpeed = Time.time + attackCD;
 
-            Destroy(projectileRB.gameObject, destroyTime);
+                playerAnim.SetTrigger("Attack");
+
+                Rigidbody projectileRB = Instantiate(projectile, projectileOrigin.position, projectileOrigin.rotation);
+                
+                
+                //TODO: DO these in projectile script
+                projectileRB.velocity = transform.TransformDirection(new Vector3(0, 0, speed));
+
+                Destroy(projectileRB.gameObject, destroyTime);
+            }
         }
     }
     #endregion
