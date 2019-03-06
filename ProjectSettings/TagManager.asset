@@ -8,6 +8,8 @@ TagManager:
   - destroyedTarget
   - Enemy
   - Player2
+  - GameManager
+  - MainCamera2
   layers:
   - Default
   - TransparentFX
@@ -40,7 +42,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Locked
   m_SortingLayers:
   - name: Default
     uniqueID: 0

@@ -22,6 +22,8 @@ public class ThrowFireball : MonoBehaviour
     private KeyCode hotkey = KeyCode.Mouse0;
 
     [SerializeField]
+    private float shootDelay = 0.3f;
+    [SerializeField]
     private float attackCD = 0.1f;
     private float attackSpeed;
 
@@ -34,6 +36,8 @@ public class ThrowFireball : MonoBehaviour
 
 
     private Animator playerAnim;
+
+    
     #endregion
 
     void Start() {
@@ -42,27 +46,25 @@ public class ThrowFireball : MonoBehaviour
 
     void Update()
     {
-        shootProjectile();
-    }
-
-    #region shootProjectile
-    private void shootProjectile()
-    {
+        #region Input
         if (Input.GetKeyDown(hotkey)) {
+            //If cooldown is low enough: shoot
             if (Time.time > attackSpeed) {
                 attackSpeed = Time.time + attackCD;
 
+                //Start animation & delay projectile
                 playerAnim.SetTrigger("Attack");
-
-                Rigidbody projectileRB = Instantiate(projectile, projectileOrigin.position, projectileOrigin.rotation);
-                
-                
-                //TODO: DO these in projectile script
-                //projectileRB.velocity = transform.TransformDirection(new Vector3(0, 0, speed));
-
-                //Destroy(projectileRB.gameObject, destroyTime);
+                StartCoroutine(shootProjectile(shootDelay));
             }
-        }
+        }    
+        #endregion
+    }
+
+    #region shootProjectile
+    IEnumerator shootProjectile(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Rigidbody projectileRB = Instantiate(projectile, projectileOrigin.position, projectileOrigin.rotation); 
     }
     #endregion
 }
