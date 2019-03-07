@@ -33,6 +33,9 @@ public class BasicEnemy : MonoBehaviour
     {
         CheckDestinationReached();
         //Debug.Log("Agent" + agent.velocity);
+
+
+        //Move animation here?
     }
 
     

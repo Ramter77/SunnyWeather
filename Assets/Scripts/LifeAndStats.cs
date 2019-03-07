@@ -6,15 +6,19 @@ public class LifeAndStats : MonoBehaviour
 {
     public float health = 100f;
     public float defense = 20f;
+
+    #region Soul
+    private bool dropSoul = true;   //(Controls if an object drops souls) //Todo: Randomize?
+    private GameObject Soul;
+    #endregion
+
     
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(gameObject.CompareTag("possibleTargets") && health <= 0)
@@ -24,7 +28,12 @@ public class LifeAndStats : MonoBehaviour
         }
         if (gameObject.CompareTag("Enemy") && health <= 0)
         {
+            #region Instantiate Soul & destroy self
+            if (dropSoul) {
+                GameObject _Soul = Instantiate(Resources.Load("Soul", typeof(GameObject)), transform.position, Quaternion.identity) as GameObject;
+            }
             Destroy(gameObject);
+            #endregion
         }
     }
 }

@@ -68,7 +68,7 @@ public class PlacePrefab : MonoBehaviour
         checkHotKeys(); //Instantiates Prefab & sets it to currentPrefab to use for following functions
         if (currentPrefab != null)
         {
-            //Get halfScale in update to check transform.y against it and place appropriately because the anchor is centered
+            //Get halfScale in update to check transform.y against it & place appropriately because the anchor is centered
             halfScale = currentPrefab.transform.localScale.y / 2f;
 
             MovePrefabToRayHit();
@@ -196,15 +196,17 @@ public class PlacePrefab : MonoBehaviour
         //If hotKey is pressed again then reset currentObject
         if (Input.GetKeyDown(hotkey))
         {
-            currentPrefab.GetComponent<MeshRenderer>().material = OriginalMaterial1;    //Switch back to original Material
-            currentPrefab.GetComponent<BoxCollider>().isTrigger = false;    //Turn on collision
-            currentPrefab.GetComponent<PlacePrefabCollisionColor>().enabled = false;     //Disable OnTrigger script
+            if (!setColorToRed) {
+                currentPrefab.GetComponent<MeshRenderer>().material = OriginalMaterial1;    //Switch back to original Material
+                currentPrefab.GetComponent<BoxCollider>().isTrigger = false;    //Turn on collision
+                currentPrefab.GetComponent<PlacePrefabCollisionColor>().enabled = false;     //Disable OnTrigger script
 
-            currentPrefab.gameObject.layer = 11;    //Put on "Turrets" layer
+                currentPrefab.gameObject.layer = 11;    //Put on "Turrets" layer
 
-            //Reset
-            currentPrefab = null;
-            placing = false;
+                //Reset
+                currentPrefab = null;
+                placing = false;
+            }
         }
     }
     #endregion

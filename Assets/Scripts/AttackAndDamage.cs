@@ -39,6 +39,9 @@ public class AttackAndDamage : MonoBehaviour
             //Debug.Log("AI: apply damage amount" + Target.GetComponent<LifeAndStats>().health);
             enableAttack = false;
             StartCoroutine(resetAttackCooldown());
+
+            //AttackAnimation
+            //SetTrigger("Attack");
         }
 
     }
