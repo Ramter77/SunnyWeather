@@ -9,7 +9,8 @@ public class BasicTower : MonoBehaviour
     private GameObject shooter;
     private GameObject target;
     public GameObject bulletPrefab;
-    public float shotSpeed = 2f;
+    public float shotSpeed = 20f;
+    public float attackSpeed; // the lower the value the faster the turret can shoot
     public float attackRange = 20f;
     private int turretLayerIgnore = ~11;
 
@@ -24,14 +25,13 @@ public class BasicTower : MonoBehaviour
     void Start()
     {
         FindClosestTarget();
-        target = closestEnemy;
         shooter = gameObject;
+        target = closestEnemy;
         shooterPosition = shooter.transform.position;
         targetPosition = target.transform.position;
         shooterVelocity = shooter.GetComponent<Rigidbody>() ? shooter.GetComponent<Rigidbody>().velocity : Vector3.zero;
         targetVelocity = target.GetComponent<Rigidbody>() ? target.GetComponent<Rigidbody>().velocity : Vector3.zero;
-        StartCoroutine(startAiming());
-        
+        StartCoroutine(shootCd());
     }
    
 
@@ -66,7 +66,7 @@ void Update()
             {
                 Debug.DrawLine(transform.position, hit.point);
                 //Debug.Log("Terrain in the way");
-                StartCoroutine(startAiming());
+                StartCoroutine(shootCd());
             }
             else
             {
@@ -81,11 +81,7 @@ void Update()
 
     }
 
-    IEnumerator startAiming()
-    {
-        yield return new WaitForSeconds(3);
-        aimAtTarget();
-    }
+
 
     private void shootProjectile()
     {
@@ -108,9 +104,32 @@ void Update()
 
     IEnumerator shootCd()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(attackSpeed);
         aimAtTarget();
     }
+
+    public void FindClosestTarget()
+    {
+        gos = GameObject.FindGameObjectsWithTag("Enemy");
+        float distance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject go in gos)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closestEnemy = go;
+                distance = curDistance;
+            }
+        }
+    }
+
+
+
+
+
+
 
 
     public static Vector3 FirstOrderIntercept
@@ -185,22 +204,7 @@ void Update()
             return Mathf.Max(-b / (2f * a), 0f); //don't shoot back in time
     }
 
-    public void FindClosestTarget()
-    {
-        gos = GameObject.FindGameObjectsWithTag("Enemy");
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
-        foreach (GameObject go in gos)
-        {
-            Vector3 diff = go.transform.position - position;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
-            {
-                closestEnemy = go;
-                distance = curDistance;
-            }
-        }
-    }
+   
 
     
 }

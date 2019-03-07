@@ -35,7 +35,7 @@ public class BasicEnemy : MonoBehaviour
         //Debug.Log("Agent" + agent.velocity);
     }
 
-
+    
 
 
     public void CheckDestinationReached()
@@ -79,7 +79,12 @@ public class BasicEnemy : MonoBehaviour
                 distance = curDistance;
             }
         }
-        agent.destination = closest.transform.position;
+        NavMeshPath path = new NavMeshPath();
+        agent.CalculatePath(closest.transform.position, path);
+        if (path.status != NavMeshPathStatus.PathPartial)
+        {
+            agent.destination = closest.transform.position;
+        } 
         gameObject.GetComponent<AttackAndDamage>().Target = closest;
     }
 }
