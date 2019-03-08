@@ -8,8 +8,8 @@ public class BasicEnemy : MonoBehaviour
 {
     [Header("Navigation")]
     public NavMeshAgent agent;
-    public GameObject closest = null;
-    private GameObject[] gos;
+    public GameObject closest = null; // closest target that is attackable
+    private GameObject[] gos; // array containing all possible targets
     private Rigidbody rigid;
 
     [Header("BehaviorStates")]
@@ -37,7 +37,10 @@ public class BasicEnemy : MonoBehaviour
 
         //Move animation here?
     }
-
+    #region check destination reached
+    /// <summary>
+    /// Checks if enemy is close to target location
+    /// </summary>
     public void CheckDestinationReached()
     {
         if(closest != null)
@@ -68,13 +71,20 @@ public class BasicEnemy : MonoBehaviour
         
     }
 
+#endregion
+
+    #region Find closest target
+    /// <summary>
+    /// Finds the closest target out of all possible targets
+    /// </summary>
+
     public void FindClosestTarget()
     {
         gos = GameObject.FindGameObjectsWithTag("possibleTargets");
         float distance = Mathf.Infinity;
         Vector3 position = transform.position;
         foreach (GameObject go in gos)
-        {
+        { // loops through all objects in the gos array
             Vector3 diff = go.transform.position - position;
             float curDistance = diff.sqrMagnitude;
             if (curDistance < distance)
@@ -85,14 +95,15 @@ public class BasicEnemy : MonoBehaviour
         }
         NavMeshPath path = new NavMeshPath();
         if(closest != null)
-        {
+        { // check if path is reachable, if so then set destination to closest target
             agent.CalculatePath(closest.transform.position, path);
             if (path.status != NavMeshPathStatus.PathPartial)
             {
                 agent.destination = closest.transform.position;
+                gameObject.GetComponent<AttackAndDamage>().Target = closest;
             }
-            gameObject.GetComponent<AttackAndDamage>().Target = closest;
         }
-        
     }
+#endregion
+
 }

@@ -4,23 +4,29 @@ using UnityEngine;
 
 public class BasicTower : MonoBehaviour
 {
+    [Header("Object References")]
     public GameObject closestEnemy = null;
-    private GameObject[] gos;
-    private GameObject shooter;
-    private GameObject target;
-    public GameObject bulletPrefab;
-    public float shotSpeed = 20f;
-    public float attackSpeed; // the lower the value the faster the turret can shoot
-    public float attackRange = 20f;
-    private int turretLayerIgnore = ~11;
+    private GameObject[] gos; // game object array for enemies
+    private GameObject shooter; // the tower - used for intercept calculation
+    private GameObject target; // the target he picked from the enemy array - used for intercept calculation
+    public GameObject bulletPrefab; // prefab he shoots
+
+    [Header("Attack Settings")]
+    [Tooltip("speed of the projectile")] public float shotSpeed = 20f;
+    [Tooltip("Attack Speed of the tower")] public float attackSpeed; // the lower the value the faster the turret can shoot
+    [Tooltip("Attack Range of th tower")]  public float attackRange = 20f; // the range of the tower
+    private int turretLayerIgnore = ~11; // ignore this layer (the layer of tower)
 
     //locations
-    public Vector3 interceptPoint;
-    private Vector3 shooterPosition;
-    private Vector3 targetPosition;
+    [Header("Positions")]
+    [Tooltip("the calculated point the tower will shoot at")] public Vector3 interceptPoint; 
+    private Vector3 shooterPosition; // tower position
+    private Vector3 targetPosition; // target position
     //velocities
-    private Vector3 shooterVelocity;
-    private Vector3 targetVelocity;
+    private Vector3 shooterVelocity; // tower velocity
+    [SerializeField] private Vector3 targetVelocity; // target velocity, since we are working with nav mesh, you need to access the agent velocity, not rigidbody
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,6 +47,13 @@ void Update()
         
     }
 
+    #region Aiming and Shooting
+
+    /// <summary>
+    /// Calls for the intercept point, then checks if that point is in range, if in range checks for any objects blocking its path
+    /// If there is no object blocking the path of the bullet, the tower shoots.
+    /// </summary>
+
     private void aimAtTarget()
     {
         FindClosestTarget();
@@ -59,19 +72,33 @@ void Update()
                 targetPosition,
                 targetVelocity
             );
-            RaycastHit hit;
-            float distance = Vector3.Distance(gameObject.transform.position, interceptPoint);
-            Vector3 fwd = interceptPoint - gameObject.transform.position;
-            if (Physics.Raycast(transform.position, fwd, out hit, distance,turretLayerIgnore))
+            Vector3 spawnPoint = gameObject.transform.position;
+            Vector3 targetPoint = interceptPoint;
+            Vector3 toTarget = targetPoint - spawnPoint;
+            if (Vector3.Distance(spawnPoint, targetPoint) <= attackRange)
             {
-                Debug.DrawLine(transform.position, hit.point);
-                //Debug.Log("Terrain in the way");
-                StartCoroutine(shootCd());
+                RaycastHit hit;
+                float distance = Vector3.Distance(gameObject.transform.position, interceptPoint);
+                Vector3 fwd = interceptPoint - gameObject.transform.position;
+                if (Physics.Raycast(transform.position, fwd, out hit, distance, turretLayerIgnore))
+                {
+                    Debug.DrawLine(transform.position, hit.point);
+                    //Debug.Log("Terrain in the way");
+                    StartCoroutine(shootCd());
+                }
+                else
+                {
+                    bulletPrefab.GetComponent<projectileVelocity>().speed = shotSpeed;
+                    Instantiate(bulletPrefab, spawnPoint, Quaternion.LookRotation(toTarget));
+                    StartCoroutine(shootCd());
+                }
             }
             else
             {
-                shootProjectile();
+                Debug.Log("Turret: Target not in range");
+                StartCoroutine(shootCd());
             }
+           
                
             //Debug.Log(shooterVelocity);
             //Debug.Log(targetVelocity);
@@ -81,26 +108,8 @@ void Update()
 
     }
 
+#endregion
 
-
-    private void shootProjectile()
-    {
-        Vector3 spawnPoint = gameObject.transform.position;
-        Vector3 targetPoint = interceptPoint;
-        Vector3 toTarget = targetPoint - spawnPoint;
-        if(Vector3.Distance(spawnPoint, targetPoint) <= attackRange)
-        {
-            bulletPrefab.GetComponent<projectileVelocity>().speed = shotSpeed;
-            Instantiate(bulletPrefab, spawnPoint, Quaternion.LookRotation(toTarget));
-            StartCoroutine(shootCd());
-        }
-        else
-        {
-            Debug.Log("Turret: Target not in range");
-            StartCoroutine(shootCd());
-        }
-       
-    }
 
     IEnumerator shootCd()
     {
@@ -108,6 +117,10 @@ void Update()
         aimAtTarget();
     }
 
+
+    /// <summary>
+    /// find closest enemy
+    /// </summary>
     public void FindClosestTarget()
     {
         gos = GameObject.FindGameObjectsWithTag("Enemy");
@@ -125,13 +138,20 @@ void Update()
         }
     }
 
+    #region Intercept Point calculation
 
-
-
-
-
-
-
+    /// <summary>
+    /// This Vector 3 calculates a point in the "future" on which a shot projectile of the tower is able to hit 
+    /// the targeted enemy. This point is calculated based on the current enemy and shooter velocity and takes the travel 
+    /// time of the bullet into account.
+    /// Any changes in velocity on the enemy site can lead into the projectile missing its target
+    /// </summary>
+    /// <param name="shooterPosition"></param>
+    /// <param name="shooterVelocity"></param>
+    /// <param name="shotSpeed"></param>
+    /// <param name="targetPosition"></param>
+    /// <param name="targetVelocity"></param>
+    /// <returns></returns>
     public static Vector3 FirstOrderIntercept
         (
             Vector3 shooterPosition,
@@ -204,7 +224,7 @@ void Update()
             return Mathf.Max(-b / (2f * a), 0f); //don't shoot back in time
     }
 
-   
+#endregion
 
-    
+
 }
