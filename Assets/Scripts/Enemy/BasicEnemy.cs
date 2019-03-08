@@ -38,33 +38,34 @@ public class BasicEnemy : MonoBehaviour
         //Move animation here?
     }
 
-    
-
-
     public void CheckDestinationReached()
     {
-        Vector3 diffToTarget = closest.transform.position - gameObject.transform.position;
-        float curDistance = diffToTarget.sqrMagnitude;
+        if(closest != null)
+        {
+            Vector3 diffToTarget = closest.transform.position - gameObject.transform.position;
+            float curDistance = diffToTarget.sqrMagnitude;
 
-        if (curDistance <= attackRange) // in attack range
-        {
-            //Debug.Log("AI: queue attack");
-            attackState = 1;
-            gameObject.GetComponent<AttackAndDamage>().performAttack();
-        }
-        if (curDistance <= stoppingRange) // in stopping range prevents ai from bumping into player
-        {
-            agent.destination = gameObject.transform.position;
-            rigid.velocity = Vector3.zero;
-            rigid.angularVelocity = Vector3.zero;
+            if (curDistance <= attackRange) // in attack range
+            {
+                //Debug.Log("AI: queue attack");
+                attackState = 1;
+                gameObject.GetComponent<AttackAndDamage>().performAttack();
+            }
+            if (curDistance <= stoppingRange) // in stopping range prevents ai from bumping into player
+            {
+                agent.destination = gameObject.transform.position;
+                rigid.velocity = Vector3.zero;
+                rigid.angularVelocity = Vector3.zero;
 
+            }
+            if ((attackState == 1 && curDistance >= attackRange) || closest.gameObject.tag == "destroyedTarget") // if target moves away or 
+            {
+                Array.Clear(gos, 0, gos.Length);
+                FindClosestTarget();
+                //gameObject.GetComponent<AttackAndDamage>().enableAttack = false;
+            }
         }
-        if ((attackState == 1 && curDistance >= attackRange) || closest.gameObject.tag == "destroyedTarget") // if target moves away or 
-        {
-            Array.Clear(gos, 0, gos.Length);
-            FindClosestTarget();
-            //gameObject.GetComponent<AttackAndDamage>().enableAttack = false;
-        }
+        
     }
 
     public void FindClosestTarget()
@@ -83,11 +84,15 @@ public class BasicEnemy : MonoBehaviour
             }
         }
         NavMeshPath path = new NavMeshPath();
-        agent.CalculatePath(closest.transform.position, path);
-        if (path.status != NavMeshPathStatus.PathPartial)
+        if(closest != null)
         {
-            agent.destination = closest.transform.position;
-        } 
-        gameObject.GetComponent<AttackAndDamage>().Target = closest;
+            agent.CalculatePath(closest.transform.position, path);
+            if (path.status != NavMeshPathStatus.PathPartial)
+            {
+                agent.destination = closest.transform.position;
+            }
+            gameObject.GetComponent<AttackAndDamage>().Target = closest;
+        }
+        
     }
 }
