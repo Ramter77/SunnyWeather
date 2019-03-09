@@ -11,6 +11,8 @@ public class PlacePrefab : MonoBehaviour
     [SerializeField]
     private GameObject[] Prefabs;
 
+    public GameObject[] TestPrefabs;
+
     [Tooltip("Layer of colliders to place Prefabs on ('Ground')")]
     [SerializeField]
     private LayerMask mask;
@@ -197,15 +199,27 @@ public class PlacePrefab : MonoBehaviour
         if (Input.GetKeyDown(hotkey))
         {
             if (!setColorToRed) {
-                currentPrefab.GetComponent<MeshRenderer>().material = OriginalMaterial1;    //Switch back to original Material
-                currentPrefab.GetComponent<BoxCollider>().isTrigger = false;    //Turn on collision
-                currentPrefab.GetComponent<PlacePrefabCollisionColor>().enabled = false;     //Disable OnTrigger script
+                //!Test
+                Debug.Log(currentPrefab.name);
+                if (currentPrefab.name == "TestRangeIndicator(Clone)") {
+                    Destroy(currentPrefab);
+                    Vector3 pos = new Vector3(currentPrefab.transform.position.x, currentPrefab.transform.position.y+5, currentPrefab.transform.position.z);
+                    Instantiate(TestPrefabs[0], pos, transform.rotation);
+                    //if target area object prefab
+                    //then instantiate fireball above
+                }
+                //Normal behaviour
+                else {
+                    currentPrefab.GetComponent<MeshRenderer>().material = OriginalMaterial1;    //Switch back to original Material
+                    currentPrefab.GetComponent<BoxCollider>().isTrigger = false;    //Turn on collision
+                    currentPrefab.GetComponent<PlacePrefabCollisionColor>().enabled = false;     //Disable OnTrigger script
 
-                currentPrefab.gameObject.layer = 11;    //Put on "Turrets" layer
+                    currentPrefab.gameObject.layer = 11;    //Put on "Turrets" layer
 
-                //Reset
-                currentPrefab = null;
-                placing = false;
+                    //Reset
+                    currentPrefab = null;
+                    placing = false;
+                }
             }
         }
     }
